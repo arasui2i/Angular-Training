@@ -1,0 +1,16 @@
+.container {
+  justify-content: center;
+  align-items: center;
+  background-color: #8f9092;
+  padding: 20px;
+}
+.logo{
+    display: inline;
+    flex-direction:row;
+}
+nav{
+    float: right;
+}
+.link{
+    cursor: pointer;
+}
