@@ -15,11 +15,11 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatIconModule,ReactiveFormsModule],
-  templateUrl: './login-component.html',
-  styleUrl: './login-component.css',
+    MatIconModule, ReactiveFormsModule],
+  templateUrl: './login.html',
+  styleUrl: './login.css',
 })
-export class LoginComponent {
+export class Login {
   hidePassword = true;
   loginForm: FormGroup;
   constructor(
@@ -28,18 +28,14 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      rememberMe: [false]
+      password: ['', Validators.required]
     });
   }
 
   login() {
-
     if (this.loginForm.valid) {
-
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-
       const userdetails = [
         {
           email: "admin@test.com",
@@ -50,11 +46,9 @@ export class LoginComponent {
           password: "Manager@123"
         }
       ];
-
       const user = userdetails.find(
         user => user.email === email && user.password === password
       );
-
       if (user) {
         console.log('Login successful');
 

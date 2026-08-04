@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login-component/login-component';
-import { HomeComponent } from './home-component/home-component';
-import { LayoutComponent } from './layout-component/layout-component';
+import { Login } from './Component/login/login';
+import { Home } from './Component/home/home';
+import { Layout } from './Component/layout/layout';
 
 export const routes: Routes = [
-    {path: '', component: LoginComponent},
-    {path: '', component: LayoutComponent,
+    {path: '', component: Login},
+    {path: '', component: Layout,
         children: [
             {
-                path: 'home', component: HomeComponent
+                path: 'home', component: Home
             }
         ]
     }

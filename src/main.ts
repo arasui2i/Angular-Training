@@ -1,17 +1,17 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
-import { LoginComponent } from './app/login-component/login-component';
+import { Login } from './app/Component/login/login';
 import { provideRouter, withHashLocation } from '@angular/router';
-import { HomeComponent } from './app/home-component/home-component';
-import { LayoutComponent } from './app/layout-component/layout-component';
+import { Home } from './app/Component/home/home';
+import { Layout } from './app/Component/layout/layout';
 
 const routes = [
-  { path: '', component: LoginComponent },
-  {path: '', component: LayoutComponent,
+  { path: '', component: Login },
+  {path: '', component: Layout,
           children: [
               {
-                  path: 'home', component: HomeComponent
+                  path: 'home', component: Home
               }
           ]
       }
