@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,6 +7,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Loginservice } from '../../services/login/loginservice';
 
 @Component({
   selector: 'app-login-component',
@@ -31,25 +32,15 @@ export class Login {
       password: ['', Validators.required]
     });
   }
+  private loginService = inject(Loginservice);
 
   login() {
     if (this.loginForm.valid) {
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-      const userdetails = [
-        {
-          email: "admin@test.com",
-          password: "Admin@123"
-        },
-        {
-          email: "manager@test.com",
-          password: "Manager@123"
-        }
-      ];
-      const user = userdetails.find(
-        user => user.email === email && user.password === password
-      );
+      const user = this.loginService.login(email, password);
       if (user) {
+        localStorage.setItem('emptoken', email);
         console.log('Login successful');
 
         this.router.navigate(['/home']);

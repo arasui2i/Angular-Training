@@ -52,10 +52,6 @@ export class Home {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // const index = this.employees.findIndex(m => m.id == result.id);
-        // if (index !== -1)
-        //   this.employees.splice(index, 1);
-
         this.employeeSignal.update(employees =>
           employees.filter(employee => employee.id !== result.id));
       }
