@@ -1,23 +1,33 @@
-import { Component, inject, Service, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeDialog } from '../employee-dialog/employee-dialog';
 import { DeleteEmployee } from '../delete-employee/delete-employee';
-import { EmployeeService } from '../../services/employee/employee';
+import { Observable } from 'rxjs';
+import { Employees } from '../../models/employees';
+import { Store } from '@ngrx/store';
+import { selectAllEmployees } from '../../store/employee/employee.selectors';
+import * as EmployeeActions from '../../store/employee/employee.actions';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home-component',
-  imports: [MatButton, MatTableModule, MatIcon],
+  imports: [MatButton, MatTableModule, MatIcon, AsyncPipe],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
-  constructor(private dialog: MatDialog) { }
-  private employeeService = inject(EmployeeService);
-  employees = this.employeeService.getEmployees();
-  employeeSignal = signal(this.employees);
+  readonly employees$: Observable<Employees[]>;
+  constructor(private dialog: MatDialog, private store: Store) {
+    this.employees$ = this.store.select(selectAllEmployees);
+  }
+
+  ngOnInit(): void {
+    // Fetch data via the store loop
+    this.store.dispatch(EmployeeActions.loadEmployees());
+  }
 
   editEmployee(employee: any) {
     console.log('Edit:', employee);
@@ -30,13 +40,10 @@ export class Home {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const index = this.employees.findIndex(a => a.id == result.id);
-        this.employeeSignal.update(employees =>
-          employees.map((employee, i) =>
-            i === index
-              ? { ...employee, ...result }
-              : employee
-          )
+        this.store.dispatch(
+          EmployeeActions.updateEmployee({
+            employee: result
+          })
         );
       }
     });
@@ -52,8 +59,9 @@ export class Home {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.employeeSignal.update(employees =>
-          employees.filter(employee => employee.id !== result.id));
+        this.store.dispatch(
+          EmployeeActions.deleteEmployee({ id: result.id })
+        );
       }
     });
   }
@@ -61,15 +69,15 @@ export class Home {
   addEmployee() {
     const dialogRef = this.dialog.open(EmployeeDialog, {
       width: '500px',
-      data: {
-        employees: this.employees
-      }
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.employeeSignal.update(employees =>
-          [ ...employees, result ]
+        this.store.dispatch(
+          EmployeeActions.addEmployee({
+            employee: result
+          })
         );
       }
     });

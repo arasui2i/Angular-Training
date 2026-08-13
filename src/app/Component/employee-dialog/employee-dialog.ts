@@ -54,7 +54,6 @@ export class EmployeeDialog {
       }
       else {
         const employee = {
-          id: this.data.employees.length + 1,
           name: this.employeeForm.get("name")?.value,
           email: this.employeeForm.get("email")?.value,
           department: this.employeeForm.get("department")?.value,
